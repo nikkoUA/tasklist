@@ -11,7 +11,7 @@
     <td class="text-center" [innerHtml]="task.email"></td>
     <td class="text-center" [innerHtml]="task.status"></td>
     <td [innerHtml]="task.text"></td>
-    <td class="text-center"><a class="btn btn-primary" [routerLink]="['edit', task.id]" [queryParamsHandling]="'preserve'">Edit</a></td>
+    <td class="text-center"><a class="btn btn-primary" [routerLink]="['/edit', task.id]" [queryParamsHandling]="'preserve'">Edit</a></td>
   </tr>
 </table>
 <div *ngIf="!hasTasks" class="alert alert-light">

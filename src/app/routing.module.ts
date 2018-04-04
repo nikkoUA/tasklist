@@ -13,12 +13,16 @@ const routes: Routes = [
     component: TaskEditComponent
   },
   {
+    path: 'edit/:id',
+    component: TaskEditComponent
+  },
+  {
     path: 'list',
     component: ListComponent,
     children: [
       {
         path: ':page',
-        component: PageComponent,
+        component: PageComponent
       },
       {
         path: '**',

@@ -9,7 +9,7 @@ import { EditResponseInterface, ListRequestParamsInterface, ListResponseInterfac
 @Injectable()
 export class TaskService {
   private baseUrl: string = 'https://uxcandy.com/~shapoval/test-task-backend';
-  private currentPage: Subject<string> = new Subject<string>();
+  private currentPageSubject: Subject<string> = new Subject<string>();
   private developer: string = 'Nikolai-Khilkovsky';
   private listErrorSubject: Subject<string> = new Subject<string>();
   private listRequest: Observable<TaskInterface[]> = null;
@@ -26,8 +26,12 @@ export class TaskService {
   constructor(private httpClient: HttpClient) {
   }
 
+  get currentPage(): string {
+    return this.listRequestParams.page;
+  }
+
   get currentPage$(): Observable<string> {
-    return this.currentPage.asObservable();
+    return this.currentPageSubject.asObservable();
   }
 
   get listError$(): Observable<string> {
@@ -66,7 +70,7 @@ export class TaskService {
         .get<ListResponseInterface>(`${this.baseUrl}/`, {params: this.listRequestParams})
         .map((listResponse: ListResponseInterface) => {
           this.updateList(listResponse);
-          this.currentPage.next(params['page']);
+          this.currentPageSubject.next(params['page']);
           return this.tasks;
         })
         .catch((error: ListResponseInterface) => {

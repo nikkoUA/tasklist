@@ -12,6 +12,7 @@ import { LoaderService, TaskService } from '../../services';
   templateUrl: './task-edit.component.html'
 })
 export class TaskEditComponent extends AbstractComponent implements OnInit {
+  currentPage: string = '1';
   form: FormGroup = null;
   image: File = null;
   imageError: string = null;
@@ -42,6 +43,7 @@ export class TaskEditComponent extends AbstractComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.currentPage = this.taskService.currentPage;
     this.getTask(this.activatedRoute.snapshot.params);
     this.createForm();
   }
