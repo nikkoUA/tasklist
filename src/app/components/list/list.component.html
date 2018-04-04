@@ -1,1 +1,12 @@
-<br>
+<div class="h1 text-center">
+  <a class="btn btn-primary float-right" [routerLink]="['/create']" [queryParamsHandling]="'preserve'">Create a new task</a>
+  Task list
+</div>
+<router-outlet></router-outlet>
+<pagination class="align-self-center"
+            *ngIf="showPagination"
+            [(ngModel)]="currentPage"
+            [totalItems]="this.totalTasks"
+            [itemsPerPage]="3"
+            [maxSize]="5"
+            (pageChanged)="onPageChanged($event)"></pagination>

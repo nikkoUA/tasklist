@@ -6,6 +6,10 @@ import { Subject } from 'rxjs/Subject';
 export class LoaderService {
   private loaderSubject: Subject<boolean> = new Subject<boolean>();
 
+  constructor() {
+    this.loaderSubject.next(true);
+  }
+
   get loader$(): Observable<boolean> {
     return this.loaderSubject.asObservable();
   }

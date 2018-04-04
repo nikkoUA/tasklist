@@ -1,0 +1,19 @@
+<table class="table table-bordered table-striped" *ngIf="hasTasks">
+  <tr>
+    <th><a [routerLink]="[]" [queryParams]="getSortQueryParams('username')">User</a></th>
+    <th class="text-center"><a [routerLink]="[]" [queryParams]="getSortQueryParams('email')">Email</a></th>
+    <th class="text-center"><a [routerLink]="[]" [queryParams]="getSortQueryParams('status')">Status</a></th>
+    <th class="text-center">Description</th>
+    <th class="text-right">Actions</th>
+  </tr>
+  <tr *ngFor="let task of tasks" (click)="onTaskClick(task)">
+    <td [innerHtml]="task.username"></td>
+    <td class="text-center" [innerHtml]="task.email"></td>
+    <td class="text-center" [innerHtml]="task.status"></td>
+    <td [innerHtml]="task.text"></td>
+    <td class="text-center"><a class="btn btn-primary" [routerLink]="['edit', task.id]" [queryParamsHandling]="'preserve'">Edit</a></td>
+  </tr>
+</table>
+<div *ngIf="!hasTasks" class="alert alert-light">
+  There is no tasks yet. You can <a [routerLink]="['/create']" [queryParamsHandling]="'preserve'" class="alert-link">create a new task by clicking this link</a>
+</div>

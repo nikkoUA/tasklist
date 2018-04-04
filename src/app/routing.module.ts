@@ -2,18 +2,23 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import {
-  LayoutComponent,
   ListComponent,
+  PageComponent,
+  TaskEditComponent
 } from './components';
 
 const routes: Routes = [
   {
+    path: 'create',
+    component: TaskEditComponent
+  },
+  {
     path: 'list',
-    component: LayoutComponent,
+    component: ListComponent,
     children: [
       {
         path: ':page',
-        component: ListComponent
+        component: PageComponent,
       },
       {
         path: '**',
