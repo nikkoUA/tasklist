@@ -1,0 +1,30 @@
+@include loader_basis(loader);
+@include app_keyframes(loader-black) {
+  0%,
+  100% {
+    background: rgba(0,0,0,.6);
+  }
+  50% {
+    background: rgba(0,0,0,.1);
+  }
+}
+
+.loader {
+  @include loader(24);
+  @include loader(32);
+  @include loader(48);
+  @include loader(64);
+}
+
+.loader-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255,255,255,.8);
+  &.loader-fixed {
+    position: fixed;
+    z-index: $zindex-tooltip;
+  }
+}
