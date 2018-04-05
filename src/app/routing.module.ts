@@ -3,9 +3,11 @@ import { RouterModule, Routes } from '@angular/router';
 
 import {
   ListComponent,
+  LoginComponent,
   PageComponent,
   TaskEditComponent
 } from './components';
+import { AuthGuard } from './services';
 
 const routes: Routes = [
   {
@@ -14,7 +16,8 @@ const routes: Routes = [
   },
   {
     path: 'edit/:id',
-    component: TaskEditComponent
+    component: TaskEditComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'list',
@@ -29,6 +32,10 @@ const routes: Routes = [
         redirectTo: '1'
       }
     ]
+  },
+  {
+    path: 'login',
+    component: LoginComponent
   },
   {
     path: '**',

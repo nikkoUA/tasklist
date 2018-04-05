@@ -2,22 +2,25 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { HttpClientModule } from '@angular/common/http';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import '../rxjs-imports';
 
-import { ListComponent, PageComponent, RootComponent, TaskEditComponent } from './components';
-import { LoaderService, TaskService } from './services';
+import { ListComponent, LoginComponent, PageComponent, RootComponent, TaskEditComponent } from './components';
+import { AuthGuard, LoaderService, TaskService, UserService } from './services';
 import { RoutingModule } from './routing.module';
 
 @NgModule({
   declarations: [
     ListComponent,
+    LoginComponent,
     PageComponent,
     RootComponent,
     TaskEditComponent
   ],
   imports: [
     BrowserModule,
+    BsDropdownModule.forRoot(),
     FormsModule,
     HttpClientModule,
     PaginationModule.forRoot(),
@@ -25,8 +28,10 @@ import { RoutingModule } from './routing.module';
     RoutingModule
   ],
   providers: [
+    AuthGuard,
     LoaderService,
-    TaskService
+    TaskService,
+    UserService
   ],
   bootstrap: [RootComponent]
 })

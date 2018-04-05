@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { TaskInterface } from '../../../types';
 import { AbstractComponent } from '../../abstract';
-import { LoaderService, TaskService } from '../../services';
+import { LoaderService, TaskService, UserService } from '../../services';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   selector: 'app-page.d-block.h-100.p-3',
   templateUrl: './page.component.html'
 })
@@ -15,10 +16,16 @@ export class PageComponent extends AbstractComponent implements OnInit {
   private queryParams: Params = {};
 
   constructor(private activatedRoute: ActivatedRoute,
+              private changeDetectorRef: ChangeDetectorRef,
               private loaderService: LoaderService,
               private router: Router,
-              private taskService: TaskService) {
+              private taskService: TaskService,
+              private userService: UserService) {
     super();
+  }
+
+  get isLoggedIn(): boolean {
+    return this.userService.isLoggedIn;
   }
 
   get hasTasks(): boolean {
@@ -69,6 +76,7 @@ export class PageComponent extends AbstractComponent implements OnInit {
         else {
           this.tasks = tasks;
           this.loaderService.loader = false;
+          this.changeDetectorRef.detectChanges();
         }
       });
   }

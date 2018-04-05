@@ -1,6 +1,22 @@
-<div class="h1 text-center">
-  <a class="btn btn-primary float-right" [routerLink]="['/create']" [queryParamsHandling]="'preserve'">Create a new task</a>
-  Task list
+<div>
+  <div class="btn-group float-right" dropdown placement="bottom right">
+    <button dropdownToggle type="button" class="btn btn-link dropdown-toggle">
+      Menu <span class="caret"></span>
+    </button>
+    <ul *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu">
+      <li role="menuitem">
+        <a class="btn btn-link dropdown-item" [routerLink]="['/create']" [queryParamsHandling]="'preserve'">Create a new task</a>
+      </li>
+      <li class="divider dropdown-divider"></li>
+      <li role="menuitem" *ngIf="!isLoggedIn">
+        <a class="btn btn-link dropdown-item" [routerLink]="['/login']" [queryParamsHandling]="'preserve'">Login</a>
+      </li>
+      <li role="menuitem" *ngIf="isLoggedIn">
+        <button class="btn btn-link dropdown-item" (click)="onClickLogout()">Logout</button>
+      </li>
+    </ul>
+  </div>
+  <div class="h1 text-center">Task list</div>
 </div>
 <router-outlet></router-outlet>
 <pagination class="align-self-center"

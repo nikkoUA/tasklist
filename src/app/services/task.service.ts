@@ -21,7 +21,7 @@ export class TaskService {
     sort_field: SortFieldEnum.USERNAME
   };
   private tasks: TaskInterface[] = [];
-  private totalTaskCountSubject: Subject<number> = new Subject<number>();
+  private totalTaskCountValue: number = 0;
 
   constructor(private httpClient: HttpClient) {
   }
@@ -38,8 +38,8 @@ export class TaskService {
     return this.listErrorSubject.asObservable();
   }
 
-  get totalTaskCount$(): Observable<number> {
-    return this.totalTaskCountSubject.asObservable();
+  get totalTaskCount(): number {
+    return this.totalTaskCountValue;
   }
 
   createTask(task: TaskInterface, image: File): Observable<EditResponseInterface> {
@@ -88,10 +88,9 @@ export class TaskService {
 
   private updateList(listResponse: ListResponseInterface) {
     this.tasks = [];
-    this.totalTaskCountSubject.next(0);
     if ( listResponse.status === 'ok' && typeof listResponse.message !== 'string' ) {
       this.tasks = listResponse.message.tasks;
-      this.totalTaskCountSubject.next(+listResponse.message.total_task_count);
+      this.totalTaskCountValue = +listResponse.message.total_task_count;
       this.listErrorSubject.next(null);
     }
     else if ( typeof listResponse.message === 'string' ) {
