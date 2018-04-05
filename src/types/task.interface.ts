@@ -4,5 +4,6 @@ export interface TaskInterface {
   email?: string;
   text?: string;
   status?: number;
+  image?: string;
   image_path?: string;
 }

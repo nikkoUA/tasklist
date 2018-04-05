@@ -18,6 +18,7 @@
   </div>
   <div class="h1 text-center">Task list</div>
 </div>
+<div class="alert alert-danger" *ngIf="errorMessage" [innerHtml]="errorMessage"></div>
 <router-outlet></router-outlet>
 <pagination class="align-self-center"
             *ngIf="showPagination"

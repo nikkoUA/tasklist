@@ -5,19 +5,34 @@ import {
   ListComponent,
   LoginComponent,
   PageComponent,
-  TaskEditComponent
+  TaskEditComponent,
+  TaskViewComponent
 } from './components';
 import { AuthGuard } from './services';
 
 const routes: Routes = [
   {
     path: 'create',
-    component: TaskEditComponent
+    component: TaskEditComponent,
+    children: [
+      {
+        path: 'preview',
+        component: TaskViewComponent,
+        data: {preview: true}
+      }
+    ]
   },
   {
     path: 'edit/:id',
     component: TaskEditComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'preview',
+        component: TaskViewComponent,
+        data: {preview: true}
+      }
+    ]
   },
   {
     path: 'list',
@@ -25,7 +40,13 @@ const routes: Routes = [
     children: [
       {
         path: ':page',
-        component: PageComponent
+        component: PageComponent,
+        children: [
+          {
+            path: 'view/:id',
+            component: TaskViewComponent
+          }
+        ]
       },
       {
         path: '**',

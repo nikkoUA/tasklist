@@ -3,7 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { AbstractFormComponent } from '../../abstract';
-import { LoaderService, TaskService, UserService } from '../../services';
+import { LoaderService, ListService, UserService } from '../../services';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -14,11 +14,11 @@ export class LoginComponent extends AbstractFormComponent implements OnInit {
 
   constructor(changeDetectorRef: ChangeDetectorRef,
               formBuilder: FormBuilder,
+              listService: ListService,
               loaderService: LoaderService,
               router: Router,
-              taskService: TaskService,
               private userService: UserService) {
-    super(changeDetectorRef, formBuilder, loaderService, router, taskService);
+    super(changeDetectorRef, formBuilder, listService, loaderService, router);
   }
 
   onSubmit(): void {

@@ -3,7 +3,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { TaskInterface } from '../../../types';
 import { AbstractComponent } from '../../abstract';
-import { LoaderService, TaskService, UserService } from '../../services';
+import { ListService, LoaderService, UserService } from '../../services';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.Default,
@@ -17,9 +17,9 @@ export class PageComponent extends AbstractComponent implements OnInit {
 
   constructor(private activatedRoute: ActivatedRoute,
               private changeDetectorRef: ChangeDetectorRef,
+              private listService: ListService,
               private loaderService: LoaderService,
               private router: Router,
-              private taskService: TaskService,
               private userService: UserService) {
     super();
   }
@@ -53,8 +53,8 @@ export class PageComponent extends AbstractComponent implements OnInit {
     return queryParams
   }
 
-  onTaskClick(task: TaskInterface): void {
-    this.router.navigate(['view', task.id], {
+  onClickTask(task: TaskInterface): void {
+    this.router.navigate(['/view', task.id], {
       queryParamsHandling: 'preserve',
       relativeTo: this.activatedRoute
     });
@@ -63,7 +63,7 @@ export class PageComponent extends AbstractComponent implements OnInit {
   private makeRequest(params: Params, queryParams: Params): void {
     this.loaderService.loader = true;
     this.queryParams = queryParams;
-    this.taskService.getList(Object.assign({}, params, queryParams))
+    this.listService.getList(Object.assign({}, params, queryParams))
       .takeUntil(this.destroyed$)
       .subscribe((tasks: TaskInterface[]) => {
         const page: number = +params['page'];

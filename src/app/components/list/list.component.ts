@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 
 import { AbstractComponent } from '../../abstract';
-import { LoaderService, TaskService, UserService } from '../../services';
+import { ListService, LoaderService, UserService } from '../../services';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.Default,
@@ -16,15 +16,15 @@ export class ListComponent extends AbstractComponent implements OnInit {
 
   constructor(private activatedRoute: ActivatedRoute,
               private changeDetectorRef: ChangeDetectorRef,
+              private listService: ListService,
               private loaderService: LoaderService,
               private router: Router,
-              private taskService: TaskService,
               private userService: UserService) {
     super();
   }
 
   get currentPage(): number {
-    return +this.taskService.currentPage;
+    return +this.listService.currentPage;
   }
 
   get isLoggedIn(): boolean {
@@ -36,11 +36,11 @@ export class ListComponent extends AbstractComponent implements OnInit {
   }
 
   get totalTasks(): number {
-    return this.taskService.totalTaskCount;
+    return this.listService.totalTaskCount;
   }
 
   ngOnInit(): void {
-    this.taskService.listError$
+    this.listService.listError$
       .takeUntil(this.destroyed$)
       .subscribe((error: string) => this.errorMessage = error);
   }

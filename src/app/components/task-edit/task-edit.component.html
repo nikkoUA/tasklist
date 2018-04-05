@@ -1,52 +1,57 @@
 <div class="h1 text-center" *ngIf="isEditTask">Edit task <strong [innerHtml]="task.id"></strong></div>
 <div class="h1 text-center" *ngIf="!isEditTask">Create new task</div>
+<div class="alert alert-danger" *ngIf="errorMessage" [innerHtml]="errorMessage"></div>
 <form novalidate (ngSubmit)="onSubmit()" [formGroup]="form" *ngIf="form !== null">
   <div class="row">
     <div class="form-group col-sm-6">
       <label>Username</label>
       <input type="text"
              class="form-control"
-             [ngClass]="{'is-invalid': form.getError('username')}"
+             [ngClass]="{'is-invalid': !isEditTask && form.getError('username')}"
              placeholder="Username"
-             formControlName="username"
-             required>
-      <div class="invalid-feedback" *ngIf="form.getError('username')" [innerHtml]="form.getError('username')"></div>
+             formControlName="username">
+      <div class="invalid-feedback" *ngIf="!isEditTask && form.getError('username')" [innerHtml]="form.getError('username')"></div>
     </div>
     <div class="form-group col-sm-6">
       <label>Email</label>
       <input type="email"
              class="form-control"
-             [ngClass]="{'is-invalid': form.getError('email')}"
+             [ngClass]="{'is-invalid': !isEditTask && form.getError('email')}"
              placeholder="Email"
-             formControlName="email"
-             required>
-      <div class="invalid-feedback" *ngIf="form.getError('email')" [innerHtml]="form.getError('email')"></div>
+             formControlName="email">
+      <div class="invalid-feedback" *ngIf="!isEditTask && form.getError('email')" [innerHtml]="form.getError('email')"></div>
     </div>
     <div class="form-group col-sm-12">
       <label>Description</label>
       <textarea class="form-control"
                 [ngClass]="{'is-invalid': form.getError('text')}"
                 placeholder="Description"
-                formControlName="text"
-                required></textarea>
+                formControlName="text"></textarea>
       <div class="invalid-feedback" *ngIf="form.getError('text')" [innerHtml]="form.getError('text')"></div>
     </div>
-    <div class="form-group col-sm-6">
+    <div class="form-group col-sm-6" *ngIf="!isEditTask">
       <label>Image</label>
       <input type="file"
              class="form-control-file"
              [ngClass]="{'form-control is-invalid': hasImageError}"
              accept="image/gif,image/png,image/jpeg"
-             (change)="onImageChanged($event)"
-             required>
+             (change)="onImageChanged($event)">
       <div class="invalid-feedback" *ngIf="hasImageError" [innerHtml]="imageError"></div>
+    </div>
+    <div class="form-group col-sm-6" *ngIf="isEditTask">
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="check-status" formControlName="status">
+        <label class="form-check-label" for="check-status">Completed</label>
+      </div>
     </div>
     <div class="col-sm-6 text-center">
       <img class="img-thumbnail" [src]="imagePreview" *ngIf="imagePreview" #imageElement>
     </div>
   </div>
-  <a class="btn btn-default" *ngIf="isEditTask" [routerLink]="['/list', currentPage]" [queryParamsHandling]="'preserve'">Cancel</a>
-  <a class="btn btn-default" *ngIf="!isEditTask" [routerLink]="['..']" [queryParamsHandling]="'preserve'">Cancel</a>
-  <button class="btn btn-primary float-right" type="submit">Save</button>
-  <a class="btn btn-default float-right" *ngIf="form.valid" [routerLink]="['preview']" [queryParamsHandling]="'preserve'">Preview</a>
+  <div class="m-3">
+    <a class="btn btn-default" [routerLink]="['/list', currentPage]" [queryParamsHandling]="'preserve'">Cancel</a>
+    <button class="btn btn-primary float-right" type="submit">Save</button>
+    <a class="btn btn-default float-right" *ngIf="isFormValid" [routerLink]="['preview']" [queryParamsHandling]="'preserve'">Preview</a>
+  </div>
 </form>
+<router-outlet></router-outlet>

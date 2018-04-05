@@ -3,5 +3,5 @@ import { TaskInterface } from './task.interface'
 
 export interface EditResponseInterface {
   status: ApiStatusEnum,
-  message?: TaskInterface
+  message?: TaskInterface | string;
 }

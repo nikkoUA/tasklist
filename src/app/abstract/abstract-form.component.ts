@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { ErrorInterface } from 'types';
 
 import { AbstractComponent } from './abstract.component';
-import { LoaderService, TaskService } from '../services';
+import { ListService, LoaderService } from '../services';
 
 export abstract class AbstractFormComponent extends AbstractComponent implements OnInit {
   currentPage: string = '1';
@@ -12,14 +12,14 @@ export abstract class AbstractFormComponent extends AbstractComponent implements
 
   constructor(protected changeDetectorRef: ChangeDetectorRef,
               protected formBuilder: FormBuilder,
+              protected listService: ListService,
               protected loaderService: LoaderService,
-              protected router: Router,
-              protected taskService: TaskService) {
+              protected router: Router) {
     super();
   }
 
   ngOnInit(): void {
-    this.currentPage = this.taskService.currentPage;
+    this.currentPage = this.listService.currentPage || '1';
     this.createForm();
   }
 

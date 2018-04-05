@@ -6,8 +6,8 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import '../rxjs-imports';
 
-import { ListComponent, LoginComponent, PageComponent, RootComponent, TaskEditComponent } from './components';
-import { AuthGuard, LoaderService, TaskService, UserService } from './services';
+import { ListComponent, LoginComponent, PageComponent, RootComponent, TaskEditComponent, TaskViewComponent } from './components';
+import { AuthGuard, ListService, LoaderService, TaskService, UserService } from './services';
 import { RoutingModule } from './routing.module';
 
 @NgModule({
@@ -16,7 +16,8 @@ import { RoutingModule } from './routing.module';
     LoginComponent,
     PageComponent,
     RootComponent,
-    TaskEditComponent
+    TaskEditComponent,
+    TaskViewComponent
   ],
   imports: [
     BrowserModule,
@@ -29,6 +30,7 @@ import { RoutingModule } from './routing.module';
   ],
   providers: [
     AuthGuard,
+    ListService,
     LoaderService,
     TaskService,
     UserService

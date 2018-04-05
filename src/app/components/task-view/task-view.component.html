@@ -1,0 +1,26 @@
+<div class="container" *ngIf="task">
+  <div class="h1 text-center" *ngIf="isPreview && isExistingTask">Preview changes in task <strong [innerHtml]="task.id"></strong></div>
+  <div class="h1 text-center" *ngIf="isPreview && !isExistingTask">Preview new task</div>
+  <div class="h1 text-center" *ngIf="!isPreview">Task <strong [innerHtml]="task.id"></strong></div>
+  <div class="row">
+    <div class="col-sm-7">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <div class="h5" [innerHtml]="task.username"></div>
+          <div class="small" [innerHtml]="task.email"></div>
+        </li>
+        <li class="list-group-item">
+          <p><strong>Task description</strong></p>
+          <div [innerHtml]="task.text"></div>
+        </li>
+      </ul>
+    </div>
+    <div class="col-sm-5 text-center">
+      <img class="img-thumbnail" [src]="task.image_path">
+    </div>
+  </div>
+  <div class="m-3">
+    <a class="btn btn-default" [routerLink]="backRouterLink" [queryParamsHandling]="'preserve'">Back</a>
+  </div>
+</div>
+
