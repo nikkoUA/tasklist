@@ -8,7 +8,8 @@ import { ListService, LoaderService, UserService } from '../../services';
 @Component({
   changeDetection: ChangeDetectionStrategy.Default,
   selector: 'app-page.d-block.h-100.p-3',
-  templateUrl: './page.component.html'
+  templateUrl: './page.component.html',
+  styleUrls: ['./page.component.scss']
 })
 export class PageComponent extends AbstractComponent implements OnInit {
   tasks: TaskInterface[] = [];
@@ -54,7 +55,7 @@ export class PageComponent extends AbstractComponent implements OnInit {
   }
 
   onClickTask(task: TaskInterface): void {
-    this.router.navigate(['/view', task.id], {
+    this.router.navigate(['view', task.id], {
       queryParamsHandling: 'preserve',
       relativeTo: this.activatedRoute
     });
