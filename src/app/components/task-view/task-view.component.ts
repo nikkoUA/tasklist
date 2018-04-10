@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { TaskInterface } from '../../../types';
@@ -17,9 +18,19 @@ export class TaskViewComponent implements OnInit {
 
   constructor(private activatedRoute: ActivatedRoute,
               private listService: ListService,
+              private domSanitizer: DomSanitizer,
               private router: Router,
               private taskService: TaskService) {
   }
+
+  get imagePreviewSrc(): SafeUrl {
+    return this.domSanitizer.bypassSecurityTrustUrl(this.task.image_path);
+  }
+
+  get isCompletedTask(): boolean {
+    return this.task.status === 10;
+  }
+
 
   get isExistingTask(): boolean {
     return Boolean(this.task.id);

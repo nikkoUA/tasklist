@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Ng2ImgMaxService } from 'ng2-img-max';
 
 import { ApiStatusEnum, EditResponseInterface, TaskInterface } from '../../../types';
 import { AbstractFormComponent } from '../../abstract';
@@ -15,16 +17,16 @@ export class TaskEditComponent extends AbstractFormComponent implements OnInit {
   errorMessage: string = null;
   image: File = null;
   imageError: string = null;
-  imagePreview: string = null;
+  imagePath: string = null;
   task: TaskInterface = {};
-
-  @ViewChild('imageElement') imageElement: ElementRef;
 
   constructor(changeDetectorRef: ChangeDetectorRef,
               formBuilder: FormBuilder,
               listService: ListService,
               loaderService: LoaderService,
               router: Router,
+              private domSanitizer: DomSanitizer,
+              private ng2ImgMaxService: Ng2ImgMaxService,
               private taskService: TaskService,
               private activatedRoute: ActivatedRoute) {
     super(changeDetectorRef, formBuilder, listService, loaderService, router);
@@ -32,6 +34,10 @@ export class TaskEditComponent extends AbstractFormComponent implements OnInit {
 
   get hasImageError(): boolean {
     return Boolean(this.imageError);
+  }
+
+  get imagePreviewSrc(): SafeUrl {
+    return this.domSanitizer.bypassSecurityTrustUrl(this.imagePath);
   }
 
   get isEditTask(): boolean {
@@ -59,21 +65,21 @@ export class TaskEditComponent extends AbstractFormComponent implements OnInit {
   }
 
   onImageChanged(event: Event): void {
-    this.imagePreview = null;
-    this.imageError = null;
     this.image = null;
+    this.imageError = null;
+    this.imagePath = null;
     const target: HTMLInputElement = event.target as HTMLInputElement;
     if ( target.files && target.files[0] ) {
-      const image: File = target.files[0];
-      const fileReader: FileReader = new FileReader();
-      fileReader.onload = ((imageFile: File) => {
-        return (event: ProgressEvent) => {
-          this.imagePreview = event.target['result'];
-          this.changeDetectorRef.detectChanges();
-          setTimeout(() => this.validateImage(imageFile));
-        };
-      })(image);
-      fileReader.readAsDataURL(image);
+      const file: File = target.files[0];
+      this.ng2ImgMaxService.resizeImage(file, 320, 240)
+        .takeUntil(this.destroyed$)
+        .subscribe(
+          (uploadedImage: Blob) => {
+            this.image = new File([uploadedImage], file.name);
+            this.previewImage();
+          },
+          () => this.imageError = 'Unsupported file format'
+        );
     }
     else {
       this.image = null;
@@ -116,7 +122,7 @@ export class TaskEditComponent extends AbstractFormComponent implements OnInit {
     if ( params['id'] ) {
       this.task = this.listService.getTask(+params['id']) || {};
       if ( this.isEditTask ) {
-        this.imagePreview = this.task.image_path;
+        this.imagePath = this.task.image_path;
       }
       else {
         this.onGetDataError();
@@ -169,6 +175,16 @@ export class TaskEditComponent extends AbstractFormComponent implements OnInit {
     });
   }
 
+  private previewImage(): void {
+    const fileReader: FileReader = new FileReader();
+    fileReader.readAsDataURL(this.image);
+    fileReader.onload = () => {
+      this.imagePath = fileReader.result;
+      this.updatePreviewCache();
+      this.changeDetectorRef.detectChanges();
+    };
+  }
+
   private setFormListeners(): void {
     this.form.valueChanges
       .subscribe(() => this.updatePreviewCache());
@@ -190,26 +206,10 @@ export class TaskEditComponent extends AbstractFormComponent implements OnInit {
   private updatePreviewCache(): void {
     this.taskService.task = Object.assign({}, this.task, {
       email: this.form.get('email').value,
-      image_path: this.imagePreview,
+      image_path: this.imagePath,
       status: this.isEditTask && this.form.get('status').value ? 10 : 0,
       text: this.form.get('text').value,
       username: this.form.get('username').value
     });
-  }
-
-  private validateImage(imageFile: File): void {
-    if ( this.imagePreview ) {
-      if ( this.imageElement.nativeElement['naturalWidth'] > 320 && this.imageElement.nativeElement['naturalHeight'] > 240 ) {
-        this.imageError = 'Allowed image size 320х240px';
-      }
-      else {
-        this.image = imageFile;
-      }
-    }
-    else {
-      this.imageError = 'Unsupported file format';
-    }
-    this.updatePreviewCache();
-    this.changeDetectorRef.detectChanges();
   }
 }

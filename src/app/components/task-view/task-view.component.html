@@ -9,14 +9,21 @@
           <div class="h5" [innerHtml]="task.username"></div>
           <div class="small" [innerHtml]="task.email"></div>
         </li>
+        <li class="list-group-item" *ngIf="isExistingTask">
+          <p>
+            <strong>Status:</strong>
+            <span *ngIf="isCompletedTask">Completed</span>
+            <span *ngIf="!isCompletedTask">In Progress</span>
+          </p>
+        </li>
         <li class="list-group-item">
-          <p><strong>Task description</strong></p>
+          <p><strong>Task description:</strong></p>
           <div [innerHtml]="task.text"></div>
         </li>
       </ul>
     </div>
     <div class="col-sm-5 text-center">
-      <img class="img-thumbnail" [src]="task.image_path">
+      <img class="img-thumbnail" [src]="imagePreviewSrc">
     </div>
   </div>
   <div class="m-3">
